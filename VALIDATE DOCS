@@ -1,0 +1,41 @@
+name: Validate PoE Docs Structure
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  validate-docs-folder:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Verify Required Docs Files Exist
+        run: |
+          echo "Checking required files in /docs directory..."
+         
+          if [ ! -d "docs" ]; then
+            echo "ERROR: /docs directory does not exist!"
+            exit 1
+          fi
+
+          if [ ! -f "docs/schema.sql" ]; then
+            echo "ERROR: docs/schema.sql is missing!"
+            exit 1
+          fi
+
+          if [ ! -f "docs/endpoint_plan.md" ] && [ ! -f "docs/endpoint_plan.pdf" ]; then
+            echo "ERROR: docs/endpoint_plan (MD or PDF) is missing!"
+            exit 1
+          fi
+
+          if [ ! -f "docs/erd.png" ] && [ ! -f "docs/erd.pdf" ]; then
+            echo "ERROR: docs/erd (PNG or PDF) is missing!"
+            exit 1
+          fi
+
+       
